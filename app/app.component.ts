@@ -1,5 +1,5 @@
-import { Component,ViewChild } from '@angular/core';
-import { MatTableDataSource,MatPaginator } from '@angular/material';
+import { Component, ViewChild } from '@angular/core';
+import { MatPaginator, MatTableDataSource, PageEvent } from '@angular/material';
 import { AppService } from './app.service';
 
 @Component({
@@ -8,21 +8,35 @@ import { AppService } from './app.service';
   styleUrls: ['./app.component.css'],
 })
 export class AppComponent {
-  constructor(private _appService: AppService) {}
+  constructor(private _appService: AppService) {
+    this.loadData();
+  }
   name = 'Angular 5';
+  totalRows = 10;
+  pageSize = 3;
+  currentPage = 0;
+  pageSizeOptions: number[] = [];
   displayedColumns = ['id', 'avatar', 'first_name', 'last_name', 'email'];
   public dataSource: MatTableDataSource<Element>;
   @ViewChild(MatPaginator) paginator: MatPaginator;
 
-  ngOnInit() {
-    this._appService.getData(1, 3).subscribe((res: any) => {
-      this.dataSource = new MatTableDataSource<Element>(res.data);
-      console.log(res.data);
-    });
+  loadData() {
+    this._appService
+      .getData(this.currentPage, this.pageSize)
+      .subscribe((res: any) => {
+        this.dataSource = new MatTableDataSource<Element>(res.data);
+        setTimeout(() => {
+          this.paginator.pageIndex = this.currentPage;
+          this.paginator.length = res.total;
+        });
+      });
   }
 
-  ngAfterViewInit() {
-    this.dataSource.paginator = this.paginator;
+  pageChanged(event: PageEvent) {
+    console.log({ event });
+    this.pageSize = event.pageSize;
+    this.currentPage = event.pageIndex;
+    this.loadData();
   }
 }
 

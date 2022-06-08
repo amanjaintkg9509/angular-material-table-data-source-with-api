@@ -8,6 +8,7 @@ import { HttpClientModule } from '@angular/common/http';
 
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { MatTableModule } from '@angular/material/table';
+import { MatPaginatorModule } from '@angular/material';
 import { AppService } from './app.service';
 
 @NgModule({
@@ -17,9 +18,10 @@ import { AppService } from './app.service';
     BrowserAnimationsModule,
     MatTableModule,
     HttpClientModule,
+    MatPaginatorModule,
   ],
   declarations: [AppComponent, HelloComponent],
   bootstrap: [AppComponent],
-  providers: [AppService]
+  providers: [AppService],
 })
 export class AppModule {}
